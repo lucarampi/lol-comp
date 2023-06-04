@@ -18,6 +18,8 @@ import { RiotAPITypes } from "@fightmegg/riot-api";
 import { filter, includes, sampleSize, some } from "lodash";
 import { BsDash, BsPlus, BsQuestion } from "react-icons/bs";
 import { LuDices } from "react-icons/lu";
+import Head from "next/head";
+import Link from "next/link";
 
 interface ChampionType
   extends RiotAPITypes.DDragon.DDragonChampionListDataDTO {}
@@ -100,121 +102,138 @@ export default function ChampionList({ championsList }: ChampionListProps) {
   );
 
   return (
-    <Container maxW={"3xl"}>
-      <Stack
-        direction={"column"}
-        spacing={3}
-        align={"center"}
-        alignSelf={"center"}
-        position={"relative"}
-        py={{ base: 20, md: 20 }}
-      >
-        <Heading
-          fontWeight={600}
-          fontSize={{ base: "2xl", sm: "2xl", md: "5xl" }}
-          mb={2}
+    <>
+      <Box opacity={0} position={"absolute"} zIndex={-50}>
+        {!!championsList &&
+          championsList.map((champion) => (
+            <Image
+              fill
+              alt="a"
+              key={champion?.id}
+              src={
+                "http://ddragon.leagueoflegends.com/cdn/" +
+                champion?.version +
+                "/img/champion/" +
+                champion?.image?.full
+              }
+            />
+          ))}
+      </Box>
+      <Container zIndex={0} maxW={"3xl"}>
+        <Stack
+          direction={"column"}
+          spacing={3}
+          align={"center"}
+          alignSelf={"center"}
+          position={"relative"}
+          py={{ base: 20, md: 20 }}
         >
-          Não sabe do que jogar? <br />
-        </Heading>
-        {!!selectedChamps ? (
-          <Stack wrap={"wrap"} direction={"row"}>
-            {selectedChamps?.map((champion) => (
-              <Box
-                position={"relative"}
-                key={champion?.name}
-                width={[14, 16, 20]}
-                height={[14, 16, 20]}
-              >
-                <Image
-                  fill
-                  src={
-                    "http://ddragon.leagueoflegends.com/cdn/" +
-                    champion?.version +
-                    "/img/champion/" +
-                    champion?.image?.full
-                  }
-                  alt={champion?.name}
+          <Heading
+            fontWeight={600}
+            fontSize={{ base: "2xl", sm: "2xl", md: "5xl" }}
+            mb={2}
+          >
+            Não sabe do que jogar? <br />
+          </Heading>
+          {!!selectedChamps ? (
+            <Stack wrap={"wrap"} direction={"row"}>
+              {selectedChamps?.map((champion) => (
+                <Box
+                  position={"relative"}
+                  key={champion?.name}
+                  width={[14, 16, 20]}
+                  height={[14, 16, 20]}
+                >
+                  <Image
+                    fill
+                    src={
+                      "http://ddragon.leagueoflegends.com/cdn/" +
+                      champion?.version +
+                      "/img/champion/" +
+                      champion?.image?.full
+                    }
+                    alt={champion?.name}
+                  />
+                </Box>
+              ))}
+            </Stack>
+          ) : (
+            <Stack direction={"row"}>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Icon
+                  border={"2px"}
+                  key={i}
+                  width={[14, 16, 20]}
+                  height={[14, 16, 20]}
+                  as={BsQuestion}
                 />
-              </Box>
-            ))}
-          </Stack>
-        ) : (
-          <Stack direction={"row"}>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Icon
-                border={"2px"}
-                key={i}
-                width={[14, 16, 20]}
-                height={[14, 16, 20]}
-        
-                as={BsQuestion}
-              />
-            ))}
-          </Stack>
-        )}
+              ))}
+            </Stack>
+          )}
 
-        <Stack alignItems={"center"} gap={3} mt={3} direction={"column"}>
-          <HStack wrap={"wrap"} justifyContent={"center"} spacing={2}>
-            {options?.map((option) => (
-              <Tag
-                size={"lg"}
-                key={option.value}
-                alignItems={"center"}
-                borderRadius="full"
-                variant="solid"
-                onClick={() =>
-                  setSelectedOptions((oldOptions) => {
-                    const isSelected = some(selectedOptions, {
+          <Stack alignItems={"center"} gap={3} mt={3} direction={"column"}>
+            <HStack wrap={"wrap"} justifyContent={"center"} spacing={2}>
+              {options?.map((option) => (
+                <Tag
+                  size={"lg"}
+                  key={option.value}
+                  alignItems={"center"}
+                  borderRadius="full"
+                  variant="solid"
+                  onClick={() =>
+                    setSelectedOptions((oldOptions) => {
+                      const isSelected = some(selectedOptions, {
+                        value: option.value,
+                        label: option.label,
+                      });
+                      if (isSelected) {
+                        const newOptions = oldOptions?.filter(
+                          (item) =>
+                            item.label !== option.label &&
+                            item.value !== option.value
+                        );
+                        return [...new Set(newOptions)] || null;
+                      }
+                      if (oldOptions == null) {
+                        return [...new Set([option])] || null;
+                      }
+
+                      return [...new Set([...oldOptions, option])] || null;
+                    })
+                  }
+                  colorScheme={
+                    some(selectedOptions, {
                       value: option.value,
                       label: option.label,
-                    });
-                    if (isSelected) {
-                      const newOptions = oldOptions?.filter(
-                        (item) =>
-                          item.label !== option.label &&
-                          item.value !== option.value
-                      );
-                      return [...new Set(newOptions)] || null;
-                    }
-                    if (oldOptions == null) {
-                      return [...new Set([option])] || null;
-                    }
-
-                    return [...new Set([...oldOptions, option])] || null;
-                  })
-                }
-                colorScheme={
-                  some(selectedOptions, {
-                    value: option.value,
-                    label: option.label,
-                  })
-                    ? "messenger"
-                    : "gray"
-                }
-              >
-                <TagLabel>{option.label}</TagLabel>
-                <TagRightIcon>
-                  {some(selectedOptions, {
-                    value: option.value,
-                    label: option.label,
-                  }) ? (
-                    <BsDash size={26} />
-                  ) : (
-                    <BsPlus size={26} />
-                  )}
-                </TagRightIcon>
-              </Tag>
-            ))}
-          </HStack>
-          <Button
-            colorScheme={"messenger"}
-            onClick={rollChampions}
-            rightIcon={<LuDices size={20} />}
-          >
-            Sortear composição
-          </Button>
+                    })
+                      ? "messenger"
+                      : "gray"
+                  }
+                >
+                  <TagLabel>{option.label}</TagLabel>
+                  <TagRightIcon>
+                    {some(selectedOptions, {
+                      value: option.value,
+                      label: option.label,
+                    }) ? (
+                      <BsDash size={26} />
+                    ) : (
+                      <BsPlus size={26} />
+                    )}
+                  </TagRightIcon>
+                </Tag>
+              ))}
+            </HStack>
+            <Button
+              colorScheme={"messenger"}
+              onClick={rollChampions}
+              rightIcon={<LuDices size={20} />}
+            >
+              Sortear composição
+            </Button>
+          </Stack>
         </Stack>
-      </Stack>
-    </Container>
+      </Container>
+    </>
   );
 }
