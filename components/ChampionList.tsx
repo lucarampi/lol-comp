@@ -1,49 +1,105 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Head from "next/head"
+import { useState } from "react";
+import Head from "next/head";
 import {
   Button,
   Container,
+  HStack,
   Heading,
   Icon,
   Image,
-  Stack
-} from "@chakra-ui/react"
-import { RiotAPITypes } from "@fightmegg/riot-api"
-import {sampleSize} from "lodash"
-import { BsQuestion } from "react-icons/bs"
-import { LuDices } from "react-icons/lu"
+  Select,
+  Stack,
+  Tag,
+  TagCloseButton,
+  TagLabel,
+  TagRightIcon,
+} from "@chakra-ui/react";
+import { RiotAPITypes } from "@fightmegg/riot-api";
+import { filter, includes, sampleSize, some } from "lodash";
+import { BsDash, BsPlus, BsQuestion } from "react-icons/bs";
+import { LuDices } from "react-icons/lu";
 
 interface ChampionType
   extends RiotAPITypes.DDragon.DDragonChampionListDataDTO {}
+
+enum ChampionsTypeEnum {
+  "Fighter" = "Lutador",
+  "Tank" = "Tank",
+  "Mage" = "Mago",
+  "Assassin" = "Assassino",
+  "Marksman" = "Atirador",
+  "Support" = "Suporte",
+}
 interface ChampionListProps {
-  championsList?: ChampionType[]
+  championsList?: ChampionType[];
+}
+interface Option {
+  value: string;
+  label: string;
 }
 
 export default function ChampionList({ championsList }: ChampionListProps) {
   const [selectedChamps, setSelectedChamps] = useState<ChampionType[] | null>(
     null
-  )
+  );
+  const [selectedOptions, setSelectedOptions] = useState<Option[] | null>(null);
+  const [options, setOptions] = useState<Option[] | null>(
+    getChampionsTypeOptions()
+  );
+
+  function getChampionsTypeOptions() {
+    const options: Option[] = Object.entries(ChampionsTypeEnum).map(
+      ([value, label]) => {
+        return {
+          value,
+          label,
+        };
+      }
+    );
+    return options || null;
+  }
+
   function rollChampions() {
-    const randomChamps = sampleSize(championsList, 5) || null
-    setSelectedChamps(randomChamps)
+    if (
+      selectedOptions === null ||
+      selectedOptions?.length === 6 ||
+      selectedOptions?.length === 0
+    ) {
+      const randomChamps = sampleSize(championsList, 5) || null;
+      setSelectedChamps(randomChamps);
+      return;
+    }
+
+    const filteredChampions = filter(championsList, (champion) => {
+      const temp = selectedOptions.map((item) => item.value);
+      //@ts-ignore
+      return includes(champion?.tags, ...temp);
+    });
+
+    const randomChamps = sampleSize(filteredChampions, 5) || null;
+    setSelectedChamps(randomChamps);
+    return;
   }
   const filteredChampions = (
     name: string,
     champions?: RiotAPITypes.DDragon.DDragonChampionListDataDTO[]
   ) => {
-    console.log(name)
+    console.log(name);
     if (!champions || champions.length == 0) {
-      return [] as RiotAPITypes.DDragon.DDragonChampionListDataDTO[]
+      return [] as RiotAPITypes.DDragon.DDragonChampionListDataDTO[];
     }
     if (name?.trim().length === 0) {
-      return champions
+      return champions;
     }
     return champions?.filter((item) =>
       item.name.toLocaleLowerCase().includes(name?.trim().toLowerCase())
-    )
-  }
+    );
+  };
+  const championsTags = new Set(
+    championsList?.map((champ) => champ.tags).flat()
+  );
 
   return (
     <Container maxW={"3xl"}>
@@ -68,7 +124,6 @@ export default function ChampionList({ championsList }: ChampionListProps) {
               <Image
                 width={16}
                 height={16}
-                
                 key={champion?.name}
                 src={
                   "http://ddragon.leagueoflegends.com/cdn/" +
@@ -83,20 +138,79 @@ export default function ChampionList({ championsList }: ChampionListProps) {
         ) : (
           <Stack direction={"row"}>
             {Array.from({ length: 5 }).map((_, i) => (
-              <Icon border={"2px"} key={i} width={16} height={16} as={BsQuestion} />
+              <Icon
+                border={"2px"}
+                key={i}
+                width={16}
+                height={16}
+                as={BsQuestion}
+              />
             ))}
           </Stack>
         )}
 
-        <Button
-          mt={3}
-          colorScheme={"messenger"}
-          onClick={rollChampions}
-          rightIcon={<LuDices size={20} />}
-        >
-          Sortear composição
-        </Button>
+        <Stack alignItems={"center"} gap={3} mt={3} direction={"column"}>
+          <HStack wrap={"wrap"} justifyContent={"center"} spacing={2}>
+            {options?.map((option) => (
+              <Tag
+                size={"lg"}
+                key={option.value}
+                alignItems={"center"}
+                borderRadius="full"
+                variant="solid"
+                onClick={() =>
+                  setSelectedOptions((oldOptions) => {
+                    const isSelected = some(selectedOptions, {
+                      value: option.value,
+                      label: option.label,
+                    });
+                    if (isSelected) {
+                      const newOptions = oldOptions?.filter(
+                        (item) =>
+                          item.label !== option.label &&
+                          item.value !== option.value
+                      );
+                      return [...new Set(newOptions)] || null;
+                    }
+                    if (oldOptions == null) {
+                      return [...new Set([option])] || null;
+                    }
+
+                    return [...new Set([...oldOptions, option])] || null;
+                  })
+                }
+                colorScheme={
+                  some(selectedOptions, {
+                    value: option.value,
+                    label: option.label,
+                  })
+                    ? "messenger"
+                    : "gray"
+                }
+              >
+                <TagLabel mt={-0.5}>{option.label}</TagLabel>
+                <TagRightIcon>
+                  {some(selectedOptions, {
+                    value: option.value,
+                    label: option.label,
+                  }) ? (
+                    <BsPlus size={26} />
+                  ) : (
+                    <BsDash size={26} />
+                  )}
+                </TagRightIcon>
+              </Tag>
+            ))}
+          </HStack>
+          <Button
+            colorScheme={"messenger"}
+            onClick={rollChampions}
+            rightIcon={<LuDices size={20} />}
+          >
+            Sortear composição
+          </Button>
+        </Stack>
       </Stack>
     </Container>
-  )
+  );
 }
