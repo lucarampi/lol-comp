@@ -121,6 +121,7 @@ export default function ChampionList({ championsList }: ChampionListProps) {
               <Image
                 width={16}
                 height={16}
+                quality={"100"}
                 key={champion?.name}
                 src={
                   "http://ddragon.leagueoflegends.com/cdn/" +
@@ -129,6 +130,8 @@ export default function ChampionList({ championsList }: ChampionListProps) {
                   champion?.image?.full
                 }
                 alt={champion?.name}
+                unoptimized
+                
               />
             ))}
           </Stack>
