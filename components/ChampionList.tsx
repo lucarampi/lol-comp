@@ -145,8 +145,9 @@ export default function ChampionList({ championsList }: ChampionListProps) {
               <Icon
                 border={"2px"}
                 key={i}
-                width={16}
-                height={16}
+                width={[14, 16, 20]}
+                height={[14, 16, 20]}
+        
                 as={BsQuestion}
               />
             ))}
