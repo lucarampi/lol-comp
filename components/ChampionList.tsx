@@ -7,9 +7,9 @@ import {
   Container,
   Heading,
   Icon,
+  Image,
   Stack
 } from "@chakra-ui/react"
-import { Image } from "@chakra-ui/next-js"
 import { RiotAPITypes } from "@fightmegg/riot-api"
 import {sampleSize} from "lodash"
 import { BsQuestion } from "react-icons/bs"
@@ -68,6 +68,7 @@ export default function ChampionList({ championsList }: ChampionListProps) {
               <Image
                 width={16}
                 height={16}
+                
                 key={champion?.name}
                 src={
                   "http://ddragon.leagueoflegends.com/cdn/" +
