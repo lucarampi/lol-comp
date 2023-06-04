@@ -9,7 +9,7 @@ export default async function IndexPage() {
   const res = (await getAllChampions(
     "/api/champions"
   ))
-  const championsList = Object.values(res || {}) || []
+  const championsList = Object.values(res || {})
 
   // console.log(champions)
   return (
