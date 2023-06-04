@@ -127,7 +127,6 @@ export default function ChampionList({ championsList }: ChampionListProps) {
               >
                 <Image
                   fill
-                  quality={"60"}
                   src={
                     "http://ddragon.leagueoflegends.com/cdn/" +
                     champion?.version +
