@@ -3,21 +3,16 @@
 import { useState } from "react"
 import Head from "next/head"
 import {
-  Box,
   Button,
-  Center,
   Container,
   Heading,
   Icon,
   Image,
-  Stack,
-  Text,
-  createIcon,
-  useColorModeValue,
+  Stack
 } from "@chakra-ui/react"
 import { RiotAPITypes } from "@fightmegg/riot-api"
-import { sampleSize } from "lodash"
-import { BsQuestion, BsQuestionSquare } from "react-icons/bs"
+import {sampleSize} from "lodash"
+import { BsQuestion } from "react-icons/bs"
 import { LuDices } from "react-icons/lu"
 
 interface ChampionType
