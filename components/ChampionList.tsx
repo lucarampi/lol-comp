@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -48,6 +48,7 @@ export default function ChampionList({ championsList }: ChampionListProps) {
   const [options, setOptions] = useState<Option[] | null>(
     getChampionsTypeOptions()
   );
+  const [fakeIsLoading, setFakeIsLoading] = useState(true);
 
   function getChampionsTypeOptions() {
     const options: Option[] = Object.entries(ChampionsTypeEnum).map(
@@ -60,6 +61,16 @@ export default function ChampionList({ championsList }: ChampionListProps) {
     );
     return options || null;
   }
+
+  async function FakeLoader(time: number = 1000) {
+    setFakeIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, time));
+    setFakeIsLoading(false);
+  }
+
+  useEffect(() => {
+    FakeLoader();
+  }, [championsList]);
 
   function rollChampions() {
     if (
@@ -176,14 +187,17 @@ export default function ChampionList({ championsList }: ChampionListProps) {
           )}
 
           <Stack alignItems={"center"} gap={3} mt={3} direction={"column"}>
-            <HStack wrap={"wrap"} justifyContent={"center"} spacing={2}>
+            <HStack wrap={"wrap"} alignItems={"center"} justifyContent={"center"} spacing={2}>
               {options?.map((option) => (
-                <Tag
-                  size={"lg"}
+                <Button
+                  as={Tag}
+                  size={["sm"]}
                   key={option.value}
                   alignItems={"center"}
+                  justifyContent={"center"}
                   borderRadius="full"
                   variant="solid"
+                  isDisabled={fakeIsLoading}
                   onClick={() =>
                     setSelectedOptions((oldOptions) => {
                       const isSelected = some(selectedOptions, {
@@ -220,18 +234,19 @@ export default function ChampionList({ championsList }: ChampionListProps) {
                       value: option.value,
                       label: option.label,
                     }) ? (
-                      <BsDash size={26} />
+                      <BsDash size={28} />
                     ) : (
-                      <BsPlus size={26} />
+                      <BsPlus size={28} />
                     )}
                   </TagRightIcon>
-                </Tag>
+                </Button>
               ))}
             </HStack>
             <Button
               colorScheme={"messenger"}
               onClick={rollChampions}
               rightIcon={<LuDices size={20} />}
+              isLoading={fakeIsLoading}
             >
               Sortear composição
             </Button>
