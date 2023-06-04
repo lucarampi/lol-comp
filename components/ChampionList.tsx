@@ -359,7 +359,7 @@ export default function ChampionList({ championsList }: ChampionListProps) {
           Composições salvas:
         </Heading>
 
-        <VStack align={"start"} mt={3}>
+        <VStack align={["center","start"]} mt={4}>
           {!!savedCompositions && savedCompositions.length > 0 ? (
             savedCompositions?.map((composition, index) => (
               <Stack direction={"row"} align={"center"} key={composition.id}>
