@@ -364,7 +364,6 @@ export default function ChampionList({ championsList }: ChampionListProps) {
             savedCompositions?.map((composition, index) => (
               <Stack direction={"row"} align={"center"} key={composition.id}>
                 <Stack
-                  backgroundColor={"red"}
                   wrap={"wrap"}
                   direction={"row"}
                   alignItems={"center"}
