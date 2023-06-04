@@ -127,6 +127,7 @@ export default function ChampionList({ championsList }: ChampionListProps) {
               >
                 <Image
                   fill
+                  quality={"50"}
                   src={
                     "http://ddragon.leagueoflegends.com/cdn/" +
                     champion?.version +
@@ -134,7 +135,7 @@ export default function ChampionList({ championsList }: ChampionListProps) {
                     champion?.image?.full
                   }
                   alt={champion?.name}
-                  unoptimized
+                  priority
                 />
               </Box>
             ))}
