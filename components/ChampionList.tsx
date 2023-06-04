@@ -103,7 +103,7 @@ export default function ChampionList({ championsList }: ChampionListProps) {
 
   return (
     <>
-      <Box opacity={0} position={"absolute"} zIndex={-50}>
+      <Box display={"none"} position={"absolute"} zIndex={-50}>
         {!!championsList &&
           championsList.map((champion) => (
             <Image
@@ -111,6 +111,8 @@ export default function ChampionList({ championsList }: ChampionListProps) {
               quality={50}
               alt="a"
               key={champion?.id}
+              loading="eager"
+              decoding="async"
               src={
                 "http://ddragon.leagueoflegends.com/cdn/" +
                 champion?.version +
