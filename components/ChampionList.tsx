@@ -119,7 +119,12 @@ export default function ChampionList({ championsList }: ChampionListProps) {
         {!!selectedChamps ? (
           <Stack wrap={"wrap"} direction={"row"}>
             {selectedChamps?.map((champion) => (
-              <Box position={"relative"} key={champion?.name} width={[14,16,20]} height={[14,16,20]}>
+              <Box
+                position={"relative"}
+                key={champion?.name}
+                width={[14, 16, 20]}
+                height={[14, 16, 20]}
+              >
                 <Image
                   fill
                   src={
@@ -193,9 +198,9 @@ export default function ChampionList({ championsList }: ChampionListProps) {
                     value: option.value,
                     label: option.label,
                   }) ? (
-                    <BsPlus size={26} />
-                  ) : (
                     <BsDash size={26} />
+                  ) : (
+                    <BsPlus size={26} />
                   )}
                 </TagRightIcon>
               </Tag>
