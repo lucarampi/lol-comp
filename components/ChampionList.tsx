@@ -185,7 +185,7 @@ export default function ChampionList({ championsList }: ChampionListProps) {
                     : "gray"
                 }
               >
-                <TagLabel mt={-0.5}>{option.label}</TagLabel>
+                <TagLabel>{option.label}</TagLabel>
                 <TagRightIcon>
                   {some(selectedOptions, {
                     value: option.value,
