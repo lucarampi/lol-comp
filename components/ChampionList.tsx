@@ -108,6 +108,7 @@ export default function ChampionList({ championsList }: ChampionListProps) {
           championsList.map((champion) => (
             <Image
               fill
+              quality={50}
               alt="a"
               key={champion?.id}
               src={
@@ -145,6 +146,7 @@ export default function ChampionList({ championsList }: ChampionListProps) {
                   height={[14, 16, 20]}
                 >
                   <Image
+                    quality={50}
                     fill
                     src={
                       "http://ddragon.leagueoflegends.com/cdn/" +
