@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import {
+  Box,
   Button,
   Container,
   HStack,
@@ -118,21 +119,19 @@ export default function ChampionList({ championsList }: ChampionListProps) {
         {!!selectedChamps ? (
           <Stack wrap={"wrap"} direction={"row"}>
             {selectedChamps?.map((champion) => (
-              <Image
-                width={16}
-                height={16}
-                quality={"100"}
-                key={champion?.name}
-                src={
-                  "http://ddragon.leagueoflegends.com/cdn/" +
-                  champion?.version +
-                  "/img/champion/" +
-                  champion?.image?.full
-                }
-                alt={champion?.name}
-                unoptimized
-                
-              />
+              <Box position={"relative"} key={champion?.name} width={[14,16,20]} height={[14,16,20]}>
+                <Image
+                  fill
+                  src={
+                    "http://ddragon.leagueoflegends.com/cdn/" +
+                    champion?.version +
+                    "/img/champion/" +
+                    champion?.image?.full
+                  }
+                  alt={champion?.name}
+                  unoptimized
+                />
+              </Box>
             ))}
           </Stack>
         ) : (
