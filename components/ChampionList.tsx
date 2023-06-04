@@ -135,7 +135,6 @@ export default function ChampionList({ championsList }: ChampionListProps) {
                     champion?.image?.full
                   }
                   alt={champion?.name}
-                  priority
                 />
               </Box>
             ))}
