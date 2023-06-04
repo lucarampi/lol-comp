@@ -74,6 +74,7 @@ export default function ChampionList({ championsList }: ChampionListProps) {
                 width={16}
                 height={16}
                 rounded={"sm"}
+                key={champion?.name}
                 src={
                   "http://ddragon.leagueoflegends.com/cdn/" +
                   champion?.version +
@@ -87,7 +88,7 @@ export default function ChampionList({ championsList }: ChampionListProps) {
         ) : (
           <Stack direction={"row"}>
             {Array.from({ length: 5 }).map((_, i) => (
-              <Icon border={"2px"} width={16} height={16} as={BsQuestion} />
+              <Icon border={"2px"} key={i} width={16} height={16} as={BsQuestion} />
             ))}
           </Stack>
         )}
