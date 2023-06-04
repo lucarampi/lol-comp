@@ -1,21 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import Head from "next/head";
 import {
   Button,
   Container,
   HStack,
   Heading,
   Icon,
-  Image,
-  Select,
   Stack,
   Tag,
-  TagCloseButton,
   TagLabel,
   TagRightIcon,
 } from "@chakra-ui/react";
+import { Image } from "@chakra-ui/next-js";
 import { RiotAPITypes } from "@fightmegg/riot-api";
 import { filter, includes, sampleSize, some } from "lodash";
 import { BsDash, BsPlus, BsQuestion } from "react-icons/bs";
