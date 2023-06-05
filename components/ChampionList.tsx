@@ -99,7 +99,6 @@ export default function ChampionList({ championsList }: ChampionListProps) {
     await new Promise((resolve) => setTimeout(resolve, time));
     setFakeIsLoading(false);
   }
-
   function loadCompositionsFromLocalStorage() {
     const localStorageData = localStorage.getItem("compositions") || null;
     const parsed = !!localStorageData
@@ -161,10 +160,6 @@ export default function ChampionList({ championsList }: ChampionListProps) {
   }, []);
 
   useEffect(() => {
-    console.log("savedCompositions >>> ", savedCompositions);
-  }, [savedCompositions]);
-
-  useEffect(() => {
     FakeLoader(850);
   }, []);
 
@@ -181,8 +176,13 @@ export default function ChampionList({ championsList }: ChampionListProps) {
 
     const filteredChampions = filter(championsList, (champion) => {
       const temp = selectedOptions.map((item) => item.value);
-      //@ts-ignore
-      return includes(champion?.tags, ...temp);
+      let isMatch = false;
+      temp.forEach((item) => {
+        if (champion?.tags.includes(item)) {
+          isMatch = true;
+        }
+      });
+      return isMatch;
     });
 
     const randomChamps = sampleSize(filteredChampions, 5) || null;
@@ -221,10 +221,10 @@ export default function ChampionList({ championsList }: ChampionListProps) {
         justifyContent={"center"}
       >
         <Text mr={0.5}>Feito por</Text>
-        <Popover isLazy >
+        <Popover isLazy>
           <PopoverTrigger>
             <Text cursor={"pointer"} textDecoration={"underline"}>
-            aNLukinha
+              aNLukinha
             </Text>
           </PopoverTrigger>
           <PopoverContent boxShadow={"none !important"} outline={"none"}>
@@ -232,17 +232,34 @@ export default function ChampionList({ championsList }: ChampionListProps) {
             <PopoverCloseButton />
             <PopoverHeader>Contatos</PopoverHeader>
             <PopoverBody>
-            <HStack as={Link} width={"fit-content"} target="_blank" href="https://github.com/lucarampi">
-                <Icon as={BsGithub}/> <Text>Github</Text>
+              <HStack
+                as={Link}
+                width={"fit-content"}
+                target="_blank"
+                href="https://github.com/lucarampi"
+              >
+                <Icon as={BsGithub} /> <Text>Github</Text>
               </HStack>
-              <HStack as={Link} width={"fit-content"} target="_blank" href="https://www.instagram.com/luca.rampi_/">
-                <Icon as={BsInstagram}/> <Text>Instagram</Text>
+              <HStack
+                as={Link}
+                width={"fit-content"}
+                target="_blank"
+                href="https://www.instagram.com/luca.rampi_/"
+              >
+                <Icon as={BsInstagram} /> <Text>Instagram</Text>
               </HStack>
             </PopoverBody>
           </PopoverContent>
         </Popover>
         <Text>, um </Text>
-        <Image mx={0.5} width={6}  height={6} src={"/gold_icon.png"} unoptimized alt={"Gold icon"}/>
+        <Image
+          mx={0.5}
+          width={6}
+          height={6}
+          src={"/gold_icon.png"}
+          unoptimized
+          alt={"Gold icon"}
+        />
         <Text>afundado.</Text>
       </HStack>
       <Container pb={10} zIndex={0} maxW={"3xl"}>
