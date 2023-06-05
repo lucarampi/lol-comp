@@ -222,7 +222,7 @@ export default function ChampionList({ championsList }: ChampionListProps) {
               aNLukinha
             </Text>
           </PopoverTrigger>
-          <PopoverContent boxShadow={"none !important"} outline={"none"}>
+          <PopoverContent maxWidth={"180px"} boxShadow={"none !important"} outline={"none"}>
             <PopoverArrow />
             <PopoverCloseButton />
             <PopoverHeader>Contatos</PopoverHeader>
