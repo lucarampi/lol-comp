@@ -17,7 +17,6 @@ export default async function IndexPage() {
   // console.log(champions)
   return (
     <>
-
       <section>
         {!!championsList && <ChampionContainer championsList={championsList} />}
       </section>

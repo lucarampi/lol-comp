@@ -9,10 +9,18 @@ import {
   Heading,
   Icon,
   IconButton,
+  Link,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
   Stack,
   Tag,
   TagLabel,
@@ -26,7 +34,9 @@ import { filter, includes, isEqual, sampleSize, set, some } from "lodash";
 import {
   BsDash,
   BsDot,
+  BsGithub,
   BsInfoCircle,
+  BsInstagram,
   BsPlus,
   BsQuestion,
   BsXLg,
@@ -201,6 +211,40 @@ export default function ChampionList({ championsList }: ChampionListProps) {
             />
           ))}
       </Box>
+      <HStack
+        fontSize={"xs"}
+        py={1}
+        gap={0}
+        backgroundColor={"gray.50"}
+        width={"full"}
+        mx={"auto"}
+        justifyContent={"center"}
+      >
+        <Text mr={0.5}>Feito por</Text>
+        <Popover isLazy >
+          <PopoverTrigger>
+            <Text cursor={"pointer"} textDecoration={"underline"}>
+            aNLukinha
+            </Text>
+          </PopoverTrigger>
+          <PopoverContent boxShadow={"none !important"} outline={"none"}>
+            <PopoverArrow />
+            <PopoverCloseButton />
+            <PopoverHeader>Contatos</PopoverHeader>
+            <PopoverBody>
+            <HStack as={Link} width={"fit-content"} target="_blank" href="https://github.com/lucarampi">
+                <Icon as={BsGithub}/> <Text>Github</Text>
+              </HStack>
+              <HStack as={Link} width={"fit-content"} target="_blank" href="https://www.instagram.com/luca.rampi_/">
+                <Icon as={BsInstagram}/> <Text>Instagram</Text>
+              </HStack>
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
+        <Text>, um </Text>
+        <Image mx={0.5} width={6}  height={6} src={"/gold_icon.png"} unoptimized alt={"Gold icon"}/>
+        <Text>afundado.</Text>
+      </HStack>
       <Container pb={10} zIndex={0} maxW={"3xl"}>
         <Stack
           direction={"column"}
@@ -359,15 +403,11 @@ export default function ChampionList({ championsList }: ChampionListProps) {
           Composições salvas:
         </Heading>
 
-        <VStack align={["center","start"]} mt={4}>
+        <VStack align={["center", "start"]} mt={4}>
           {!!savedCompositions && savedCompositions.length > 0 ? (
             savedCompositions?.map((composition, index) => (
               <Stack direction={"row"} align={"center"} key={composition.id}>
-                <Stack
-                  wrap={"wrap"}
-                  direction={"row"}
-                  alignItems={"center"}
-                >
+                <Stack wrap={"wrap"} direction={"row"} alignItems={"center"}>
                   {composition?.data.champions.map((champion) => (
                     <Box
                       position={"relative"}
