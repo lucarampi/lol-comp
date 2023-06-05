@@ -318,12 +318,7 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
               {selectedChamps?.map((champion) => (
                 <Tooltip
                   hasArrow
-                  label={champion?.tags
-                    .map(
-                      (tag) =>
-                        ChampionsTypeEnum[tag as keyof typeof ChampionsTypeEnum]
-                    )
-                    .join(" | ")}
+                  label={ChampionsTypeEnum[champion?.tags[0] as keyof typeof ChampionsTypeEnum]}
                   key={champion?.name}
                 >
                   <Box
