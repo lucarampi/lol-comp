@@ -50,7 +50,7 @@ enum ChampionsTypeEnum {
   "Support" = "Suporte",
 }
 interface ChampionListProps {
-  championsList?: ChampionType[];
+  championsDTO?: RiotAPITypes.DDragon.DDragonChampionListDTO;
 }
 interface Option {
   value: string;
@@ -64,7 +64,10 @@ interface Composition {
   };
 }
 
-export default function ChampionList({ championsList }: ChampionListProps) {
+export default function ChampionList({ championsDTO }: ChampionListProps) {
+  const [championsList, setChampionsList] = useState<ChampionType[] | null>(
+    Object.values(championsDTO?.data || {}) || null
+  );
   const [selectedChamps, setSelectedChamps] = useState<ChampionType[] | null>(
     null
   );
@@ -199,7 +202,7 @@ export default function ChampionList({ championsList }: ChampionListProps) {
               decoding="async"
               src={
                 "http://ddragon.leagueoflegends.com/cdn/" +
-                champion?.version +
+                championsDTO?.version +
                 "/img/champion/" +
                 champion?.image?.full
               }
@@ -222,7 +225,11 @@ export default function ChampionList({ championsList }: ChampionListProps) {
               aNLukinha
             </Text>
           </PopoverTrigger>
-          <PopoverContent maxWidth={"180px"} boxShadow={"none !important"} outline={"none"}>
+          <PopoverContent
+            maxWidth={"180px"}
+            boxShadow={"none !important"}
+            outline={"none"}
+          >
             <PopoverArrow />
             <PopoverCloseButton />
             <PopoverHeader>Contatos</PopoverHeader>
@@ -277,7 +284,7 @@ export default function ChampionList({ championsList }: ChampionListProps) {
             <Stack wrap={"wrap"} direction={"row"}>
               {selectedChamps?.map((champion) => (
                 <Tooltip
-                hasArrow
+                  hasArrow
                   label={champion?.tags
                     .map(
                       (tag) =>
@@ -297,7 +304,7 @@ export default function ChampionList({ championsList }: ChampionListProps) {
                       fill
                       src={
                         "http://ddragon.leagueoflegends.com/cdn/" +
-                        champion?.version +
+                        championsDTO?.version +
                         "/img/champion/" +
                         champion?.image?.full
                       }
@@ -443,7 +450,7 @@ export default function ChampionList({ championsList }: ChampionListProps) {
                         fill
                         src={
                           "http://ddragon.leagueoflegends.com/cdn/" +
-                          champion?.version +
+                          championsDTO?.version +
                           "/img/champion/" +
                           champion?.image?.full
                         }
