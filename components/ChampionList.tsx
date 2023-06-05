@@ -59,6 +59,7 @@ interface Option {
 
 interface Composition {
   id: string;
+  version: string;
   data: {
     champions: ChampionType[];
   };
@@ -102,6 +103,38 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
     const parsed = !!localStorageData
       ? (JSON.parse(localStorageData) as Composition[])
       : null;
+    if (!!parsed) {
+      const needsToUpadateVersion =
+        parsed.filter((comp) => comp.version !== championsDTO?.version)
+          .length !== 0;
+      if (needsToUpadateVersion) {
+        alert(
+          "Nova versão do LoL detectada. Atualizando banco de dados local..."
+        );
+        const updatedCompositions: Composition[] = parsed.map((comp) => {
+          return {
+            id: comp.id,
+            version: championsDTO?.version || "13.11.1",
+            data: {
+              ...comp.data,
+              champions: comp.data.champions.map(
+                (champ) => championsDTO?.data[champ.name] || champ
+              ),
+            },
+          };
+        });
+        try {
+          localStorage.setItem(
+            "compositions",
+            JSON.stringify(updatedCompositions)
+          );
+        } catch (error) {
+          alert("Falha ao aplicar atualização.");
+        }
+        setSavedCompositions(updatedCompositions);
+        return;
+      }
+    }
     setSavedCompositions(parsed);
   }
 
@@ -404,6 +437,7 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
                   }
                   saveCompositionsToLocalStorage({
                     id: uuidv4(),
+                    version: championsDTO?.version || "13.11.1",
                     data: {
                       champions: selectedChamps,
                     },
