@@ -8,12 +8,7 @@ import {
   HStack,
   Heading,
   Icon,
-  IconButton,
   Link,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -26,14 +21,14 @@ import {
   TagLabel,
   TagRightIcon,
   Text,
+  Tooltip,
   VStack,
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/next-js";
 import { RiotAPITypes } from "@fightmegg/riot-api";
-import { filter, includes, isEqual, sampleSize, set, some } from "lodash";
+import { filter, isEqual, sampleSize, some } from "lodash";
 import {
   BsDash,
-  BsDot,
   BsGithub,
   BsInfoCircle,
   BsInstagram,
@@ -41,7 +36,7 @@ import {
   BsQuestion,
   BsXLg,
 } from "react-icons/bs";
-import { LuDelete, LuDices, LuSave } from "react-icons/lu";
+import { LuDices, LuSave } from "react-icons/lu";
 import { v4 as uuidv4 } from "uuid";
 interface ChampionType
   extends RiotAPITypes.DDragon.DDragonChampionListDataDTO {}
@@ -281,24 +276,35 @@ export default function ChampionList({ championsList }: ChampionListProps) {
           {!!selectedChamps ? (
             <Stack wrap={"wrap"} direction={"row"}>
               {selectedChamps?.map((champion) => (
-                <Box
-                  position={"relative"}
+                <Tooltip
+                hasArrow
+                  label={champion?.tags
+                    .map(
+                      (tag) =>
+                        ChampionsTypeEnum[tag as keyof typeof ChampionsTypeEnum]
+                    )
+                    .join(" | ")}
                   key={champion?.name}
-                  width={[14, 16, 20]}
-                  height={[14, 16, 20]}
                 >
-                  <Image
-                    quality={50}
-                    fill
-                    src={
-                      "http://ddragon.leagueoflegends.com/cdn/" +
-                      champion?.version +
-                      "/img/champion/" +
-                      champion?.image?.full
-                    }
-                    alt={champion?.name}
-                  />
-                </Box>
+                  <Box
+                    cursor={"pointer"}
+                    position={"relative"}
+                    width={[14, 16, 20]}
+                    height={[14, 16, 20]}
+                  >
+                    <Image
+                      quality={50}
+                      fill
+                      src={
+                        "http://ddragon.leagueoflegends.com/cdn/" +
+                        champion?.version +
+                        "/img/champion/" +
+                        champion?.image?.full
+                      }
+                      alt={champion?.name}
+                    />
+                  </Box>
+                </Tooltip>
               ))}
             </Stack>
           ) : (
