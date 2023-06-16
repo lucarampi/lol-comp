@@ -23,6 +23,7 @@ import {
   Text,
   Tooltip,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/next-js";
 import { RiotAPITypes } from "@fightmegg/riot-api";
@@ -38,7 +39,6 @@ import {
 } from "react-icons/bs";
 import { LuDices, LuSave } from "react-icons/lu";
 import { v4 as uuidv4 } from "uuid";
-import { Toast } from "./Toast";
 interface ChampionType
   extends RiotAPITypes.DDragon.DDragonChampionListDataDTO {}
 
@@ -65,6 +65,11 @@ interface Composition {
     champions: ChampionType[];
   };
 }
+interface ToastProps {
+  action: string;
+  id: string;
+  message: string;
+}
 
 export default function ChampionList({ championsDTO }: ChampionListProps) {
   const [championsList, setChampionsList] = useState<ChampionType[] | null>(
@@ -81,6 +86,16 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
     getChampionsTypeOptions()
   );
   const [fakeIsLoading, setFakeIsLoading] = useState(true);
+  const toast = useToast();
+
+  function generateUniqueToast({ action, id, message }: ToastProps) {
+    const toastId = `${action}-${id}`;
+    !toast.isActive(toastId) &&
+      toast({
+        id,
+        title: message,
+      });
+  }
 
   function getChampionsTypeOptions() {
     const options: Option[] = Object.entries(ChampionsTypeEnum).map(
@@ -149,10 +164,11 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
     });
 
     if (!isSaveAllowed) {
-      Toast({
+      generateUniqueToast({
         action: "create-error",
-        id: composition?.id || "",
-        message: "Não é possível salvar a mesma composição mais de uma vez",
+        id: composition?.id || uuidv4(),
+        message:
+          "Não é possível salvar a mesma composição mais de uma vez, nem uma composição vazia.",
       });
       return;
     }
