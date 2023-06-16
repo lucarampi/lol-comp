@@ -38,7 +38,7 @@ import {
 } from "react-icons/bs";
 import { LuDices, LuSave } from "react-icons/lu";
 import { v4 as uuidv4 } from "uuid";
-import Toast from "./Toast";
+import { Toast } from "./Toast";
 interface ChampionType
   extends RiotAPITypes.DDragon.DDragonChampionListDataDTO {}
 
