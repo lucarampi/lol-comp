@@ -38,6 +38,7 @@ import {
 } from "react-icons/bs";
 import { LuDices, LuSave } from "react-icons/lu";
 import { v4 as uuidv4 } from "uuid";
+import Toast from "./Toast";
 interface ChampionType
   extends RiotAPITypes.DDragon.DDragonChampionListDataDTO {}
 
@@ -148,7 +149,11 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
     });
 
     if (!isSaveAllowed) {
-      alert("Essa composição já foi salva anteriormente.");
+      Toast({
+        action: "create-error",
+        id: composition?.id || "",
+        message: "Não é possível salvar a mesma composição mais de uma vez",
+      });
       return;
     }
 
