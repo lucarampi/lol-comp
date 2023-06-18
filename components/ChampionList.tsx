@@ -44,7 +44,7 @@ import { LuDices, LuSave } from "react-icons/lu";
 import { v4 as uuidv4 } from "uuid";
 import ChampionImage from "./ChampionImage";
 export interface ChampionType
-  extends RiotAPITypes.DDragon.DDragonChampionListDataDTO { }
+  extends RiotAPITypes.DDragon.DDragonChampionListDataDTO {}
 
 export enum ChampionsTypeEnum {
   "Fighter" = "Lutador",
@@ -246,8 +246,6 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
     return;
   }
 
-
-
   return (
     <>
       <Box display={"none"} position={"absolute"} zIndex={-50}>
@@ -260,9 +258,11 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
               key={champion?.id}
               loading="eager"
               decoding="async"
-              src={
-                getChampionSquareImageSrc(champion.version, champion.image.full)
-              }
+              sizes="(max-width: 768px) 1vw, (max-width: 1200px) 1vw, 1vw"
+              src={getChampionSquareImageSrc(
+                champion.version,
+                champion.image.full
+              )}
             />
           ))}
       </Box>
@@ -477,10 +477,12 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
                     >
                       <Image
                         fill
-                        src={
-                          getChampionSquareImageSrc(champion.version, champion.image.full)
-
-                        }
+                        quality={50}
+                        sizes="(max-width: 768px) 1vw, (max-width: 1200px) 1vw, 1vw"
+                        src={getChampionSquareImageSrc(
+                          champion.version,
+                          champion.image.full
+                        )}
                         alt={champion?.name}
                       />
                     </Box>
@@ -519,20 +521,21 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
   );
 }
 
-
 export function getChampionStatsAsKeyValueArray(champion: ChampionType) {
-  const statsMap = new Map(Object.entries(champion.stats))
-  return [...statsMap]
+  const statsMap = new Map(Object.entries(champion.stats));
+  return [...statsMap];
 }
 
 export function getChampionSquareImageSrc(version: string, imageSrc: string) {
-  return "http://ddragon.leagueoflegends.com/cdn/" +
+  return (
+    "http://ddragon.leagueoflegends.com/cdn/" +
     version +
     "/img/champion/" +
     imageSrc
+  );
 }
 
 export function getChampionSplashImageSrc(id: string, num: number = 0) {
-  const formatedSplashName = `${id}_${num}.jpg`
-  return `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${formatedSplashName}`
+  const formatedSplashName = `${id}_${num}.jpg`;
+  return `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${formatedSplashName}`;
 }

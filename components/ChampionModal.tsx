@@ -76,7 +76,6 @@ export default function ChampionModal({
   useEffect(() => {
     if (!error && !!data && !!data?.data) {
       const championDataMap = new Map(Object.entries(data?.data));
-      console.log(championDataMap);
       setChampionData(championDataMap.get(champion.id));
     }
   }, [data]);
@@ -114,6 +113,8 @@ export default function ChampionModal({
                 onLoadedData={() => alert()}
                 alt={champion.name}
                 fill
+				sizes="(max-width: 768px) 55vw, (max-width: 1200px) 40vw, 40vw"
+
                 src={getChampionSplashImageSrc(champion.id)}
               />
             </Box>
@@ -140,6 +141,7 @@ export default function ChampionModal({
                   >
                     <Image
                       fill
+					  sizes="(max-width: 768px) 7vw, (max-width: 1200px) 3vw,3vw"
                       alt={championData?.passive.name || "error"}
                       src={getChampionPassiveImageSrc(
                         championData?.passive.image.full || "",
@@ -180,6 +182,7 @@ export default function ChampionModal({
                       >
                         <Image
                           fill
+						  sizes="(max-width: 768px) 7vw, (max-width: 1200px) 3vw,3vw"
                           alt={spell.id}
                           src={getChampionSpellImageSrc(
                             spell.image.full,

@@ -25,7 +25,6 @@ export async function GET(request: Request,
 
     try {
         const res = await riotApi.ddragon.champion.byName({ locale: RiotAPITypes.DDragon.LOCALE.pt_BR, championName: championId })
-        console.log(res)
 
         if (!!res && !!res?.data) {
             return NextResponse.json(res, { status: 200, statusText: "200" })
