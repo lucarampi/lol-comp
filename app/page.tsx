@@ -1,9 +1,9 @@
-import { PlatformId, RiotAPI, RiotAPITypes } from "@fightmegg/riot-api";
+import { RiotAPITypes } from "@fightmegg/riot-api";
 
 import api from "@/lib/axios";
 import ChampionContainer from "@/components/ChampionList";
-import Head from "next/head";
-import Link from "next/link";
+
+export const revalidate = 900
 
 const getAllChampions = (url: string) =>
   api
