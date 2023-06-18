@@ -151,6 +151,7 @@ export default function ChampionModal({
                 </VStack>
                 {championData?.spells.map((spell, index) => (
                   <Tooltip
+				  key={spell.name}
                     rounded={"base"}
                     placement={"top"}
                     hasArrow
