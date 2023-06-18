@@ -16,7 +16,6 @@ export default function ChampionImage({ champion }: ChampionImageProps) {
             <Tooltip
                 rounded={"base"}
                 hasArrow
-                animation={""}
                 label={<Box padding={1}>
                     <Text textAlign={"center"}>
                         {champion?.tags
