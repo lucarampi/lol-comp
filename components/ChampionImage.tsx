@@ -47,7 +47,6 @@ export default function ChampionImage({ champion }: ChampionImageProps) {
                     <Image
                         quality={50}
                         fill
-                        sizes="1vw"
                         src={getChampionSquareImageSrc(champion.version, champion.image.full)}
                         alt={champion?.name}
                     />

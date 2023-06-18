@@ -260,7 +260,6 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
               key={champion?.id}
               loading="eager"
               decoding="async"
-              sizes="1vw"
               src={
                 getChampionSquareImageSrc(champion.version, champion.image.full)
               }
@@ -478,7 +477,6 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
                     >
                       <Image
                         fill
-                        sizes="1vw"
                         src={
                           getChampionSquareImageSrc(champion.version, champion.image.full)
 

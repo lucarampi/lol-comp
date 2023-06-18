@@ -6,7 +6,7 @@ const riotApi = new RiotAPI(process.env.RGAPI_KEY || "");
 
 
 export async function GET() {
-    const res = await riotApi.ddragon.champion.all({locale: RiotAPITypes.DDragon.LOCALE.pt_BR})
+    const res = (await riotApi.ddragon.champion.all({locale: RiotAPITypes.DDragon.LOCALE.pt_BR}))
 
     return NextResponse.json({ ...res })
 }
