@@ -113,8 +113,7 @@ export default function ChampionModal({
                 onLoadedData={() => alert()}
                 alt={champion.name}
                 fill
-				sizes="(max-width: 768px) 55vw, (max-width: 1200px) 40vw, 40vw"
-
+                sizes="(max-width: 768px) 55vw, (max-width: 1200px) 40vw, 40vw"
                 src={getChampionSplashImageSrc(champion.id)}
               />
             </Box>
@@ -129,31 +128,54 @@ export default function ChampionModal({
                 marginTop={2}
                 templateColumns={"repeat(5, 1fr)"}
               >
-                <VStack gap={1}>
-                  <Box
-                    key={championData?.passive.name}
-                    rounded={"md"}
-                    overflow={"auto"}
-                    aspectRatio={"1/1"}
-                    height={{ base: "12", sm: "16", md: "16" }}
-                    width={{ base: "12", sm: "16", md: "16" }}
-                    position={"relative"}
-                  >
-                    <Image
-                      fill
-					  sizes="(max-width: 768px) 7vw, (max-width: 1200px) 3vw,3vw"
-                      alt={championData?.passive.name || "error"}
-                      src={getChampionPassiveImageSrc(
-                        championData?.passive.image.full || "",
-                        champion.version
-                      )}
-                    />
-                  </Box>
-                  <Text> Passiva</Text>
-                </VStack>
+                <Tooltip
+                  key={championData?.passive.name}
+                  rounded={"base"}
+                  placement={"top"}
+                  hasArrow
+                  label={
+                    <Box padding={1}>
+                      <VStack alignItems={"start"} gap={1}>
+                        <Heading size={"sm"}>
+                          {championData?.passive.name}
+                        </Heading>
+                        <Text
+                          fontWeight={"normal"}
+                          dangerouslySetInnerHTML={{
+                            __html: championData?.passive.description || "",
+                          }}
+                        ></Text>
+                      </VStack>
+                    </Box>
+                  }
+                >
+                  <VStack gap={1}>
+                    <Box
+                      key={championData?.passive.name}
+					  rounded={"md"}
+					  overflow={"auto"}
+					  aspectRatio={"1/1"}
+					  height={{ base: "12", sm: "16", md: "16" }}
+					  width={{ base: "12", sm: "16", md: "16" }}
+					  position={"relative"}
+                    >
+                      <Image
+                        fill
+                        sizes="(max-width: 768px) 7vw, (max-width: 1200px) 3vw,3vw"
+                        alt={championData?.passive.name || "error"}
+                        src={getChampionPassiveImageSrc(
+                          championData?.passive.image.full || "",
+                          champion.version
+                        )}
+                      />
+                    </Box>
+                    <Text> Passiva</Text>
+                  </VStack>
+                </Tooltip>
+
                 {championData?.spells.map((spell, index) => (
                   <Tooltip
-				  key={spell.name}
+                    key={spell.name}
                     rounded={"base"}
                     placement={"top"}
                     hasArrow
@@ -182,7 +204,7 @@ export default function ChampionModal({
                       >
                         <Image
                           fill
-						  sizes="(max-width: 768px) 7vw, (max-width: 1200px) 3vw,3vw"
+                          sizes="(max-width: 768px) 7vw, (max-width: 1200px) 3vw,3vw"
                           alt={spell.id}
                           src={getChampionSpellImageSrc(
                             spell.image.full,
