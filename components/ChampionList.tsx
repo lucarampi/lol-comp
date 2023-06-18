@@ -42,10 +42,11 @@ import {
 } from "react-icons/bs";
 import { LuDices, LuSave } from "react-icons/lu";
 import { v4 as uuidv4 } from "uuid";
-interface ChampionType
+import ChampionImage from "./ChampionImage";
+export interface ChampionType
   extends RiotAPITypes.DDragon.DDragonChampionListDataDTO { }
 
-enum ChampionsTypeEnum {
+export enum ChampionsTypeEnum {
   "Fighter" = "Lutador",
   "Tank" = "Tank",
   "Mage" = "Mago",
@@ -245,10 +246,7 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
     return;
   }
 
-  function getChampionStatsAsKeyValueArray(champion: ChampionType) {
-    const statsMap = new Map(Object.entries(champion.stats))
-    return [...statsMap]
-  }
+
 
   return (
     <>
@@ -257,16 +255,14 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
           championsList.map((champion) => (
             <Image
               fill
-              quality={50}
               alt="a"
+              quality={50}
               key={champion?.id}
               loading="eager"
               decoding="async"
+              sizes="1vw"
               src={
-                "http://ddragon.leagueoflegends.com/cdn/" +
-                championsDTO?.version +
-                "/img/champion/" +
-                champion?.image?.full
+                getChampionSquareImageSrc(champion.version, champion.image.full)
               }
             />
           ))}
@@ -345,49 +341,7 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
           {!!selectedChamps ? (
             <Stack wrap={"wrap"} direction={"row"}>
               {selectedChamps?.map((champion) => (
-                <Tooltip
-                  rounded={"base"}
-                  hasArrow
-                  animation={""}
-                  label={<Box padding={1}>
-                    <Text textAlign={"center"}>
-                      {champion?.tags
-                        .map(
-                          (tag) =>
-                            ChampionsTypeEnum[tag as keyof typeof ChampionsTypeEnum]
-                        )
-                        .join(" | ")}
-                    </Text>
-                    <Grid padding={1} templateColumns='repeat(2, 1fr)' fontWeight={"normal"} columnGap={4}>
-                      {getChampionStatsAsKeyValueArray(champion).filter(stat => stat[0].includes("level") || stat[0].includes("regen") ? false : true).map((value, index, array) => <GridItem colSpan={array.length - 1 == index ? 2 : 1} key={value[0]}>
-                        <HStack gap={1} alignItems={"center"} justifyContent={array.length - 1 == index ? "center" : "start"}>
-                          <Image alt={value[0]} src={`/stats/${value[0]}.webp`} width={3.5} height={3.5} /> <Text>: {value[1]}</Text>
-                        </HStack>
-                      </GridItem>)}
-
-                    </Grid>
-                  </Box>}
-                  key={champion?.name}
-                >
-                  <Box
-                    cursor={"pointer"}
-                    position={"relative"}
-                    width={[14, 16, 20]}
-                    height={[14, 16, 20]}
-                  >
-                    <Image
-                      quality={50}
-                      fill
-                      src={
-                        "http://ddragon.leagueoflegends.com/cdn/" +
-                        championsDTO?.version +
-                        "/img/champion/" +
-                        champion?.image?.full
-                      }
-                      alt={champion?.name}
-                    />
-                  </Box>
-                </Tooltip>
+                <ChampionImage key={champion.id} champion={champion} />
               ))}
             </Stack>
           ) : (
@@ -523,13 +477,11 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
                       height={["10", "12"]}
                     >
                       <Image
-                        quality={50}
                         fill
+                        sizes="1vw"
                         src={
-                          "http://ddragon.leagueoflegends.com/cdn/" +
-                          championsDTO?.version +
-                          "/img/champion/" +
-                          champion?.image?.full
+                          getChampionSquareImageSrc(champion.version, champion.image.full)
+
                         }
                         alt={champion?.name}
                       />
@@ -567,4 +519,22 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
       </Container>
     </>
   );
+}
+
+
+export function getChampionStatsAsKeyValueArray(champion: ChampionType) {
+  const statsMap = new Map(Object.entries(champion.stats))
+  return [...statsMap]
+}
+
+export function getChampionSquareImageSrc(version: string, imageSrc: string) {
+  return "http://ddragon.leagueoflegends.com/cdn/" +
+    version +
+    "/img/champion/" +
+    imageSrc
+}
+
+export function getChampionSplashImageSrc(id: string, num: number = 0) {
+  const formatedSplashName = `${id}_${num}.jpg`
+  return `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${formatedSplashName}`
 }
