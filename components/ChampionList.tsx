@@ -5,6 +5,8 @@ import {
   Box,
   Button,
   Container,
+  Grid,
+  GridItem,
   HStack,
   Heading,
   Icon,
@@ -16,6 +18,7 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
+  SimpleGrid,
   Stack,
   Tag,
   TagLabel,
@@ -40,7 +43,7 @@ import {
 import { LuDices, LuSave } from "react-icons/lu";
 import { v4 as uuidv4 } from "uuid";
 interface ChampionType
-  extends RiotAPITypes.DDragon.DDragonChampionListDataDTO {}
+  extends RiotAPITypes.DDragon.DDragonChampionListDataDTO { }
 
 enum ChampionsTypeEnum {
   "Fighter" = "Lutador",
@@ -242,6 +245,11 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
     return;
   }
 
+  function getChampionStatsAsKeyValueArray(champion: ChampionType) {
+    const statsMap = new Map(Object.entries(champion.stats))
+    return [...statsMap]
+  }
+
   return (
     <>
       <Box display={"none"} position={"absolute"} zIndex={-50}>
@@ -338,13 +346,27 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
             <Stack wrap={"wrap"} direction={"row"}>
               {selectedChamps?.map((champion) => (
                 <Tooltip
+                  rounded={"base"}
                   hasArrow
-                  label={champion?.tags
-                    .map(
-                      (tag) =>
-                        ChampionsTypeEnum[tag as keyof typeof ChampionsTypeEnum]
-                    )
-                    .join(" | ")}
+                  animation={""}
+                  label={<Box padding={1}>
+                    <Text textAlign={"center"}>
+                      {champion?.tags
+                        .map(
+                          (tag) =>
+                            ChampionsTypeEnum[tag as keyof typeof ChampionsTypeEnum]
+                        )
+                        .join(" | ")}
+                    </Text>
+                    <Grid padding={1} templateColumns='repeat(2, 1fr)' fontWeight={"normal"} columnGap={4}>
+                      {getChampionStatsAsKeyValueArray(champion).filter(stat => stat[0].includes("level") || stat[0].includes("regen") ? false : true).map((value, index, array) => <GridItem colSpan={array.length - 1 == index ? 2 : 1} key={value[0]}>
+                        <HStack gap={1} alignItems={"center"} justifyContent={array.length - 1 == index ? "center" : "start"}>
+                          <Image alt={value[0]} src={`/stats/${value[0]}.webp`} width={3.5} height={3.5} /> <Text>: {value[1]}</Text>
+                        </HStack>
+                      </GridItem>)}
+
+                    </Grid>
+                  </Box>}
                   key={champion?.name}
                 >
                   <Box

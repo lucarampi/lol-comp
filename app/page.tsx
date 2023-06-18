@@ -13,7 +13,7 @@ const getAllChampions = (url: string) =>
 export default async function IndexPage() {
   const res = await getAllChampions("/api/champions");
   const championsList = Object.values(res || {});
-  console.log(res);
+  // console.log(res);
   // console.log(champions)
   
   return (
