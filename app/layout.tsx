@@ -3,9 +3,13 @@ import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Comp builder",
-  description: "Não sabe com o que jogar? Crie sua composição em um click",
+  description: "Não sabe com o que jogar? Crie sua composição em um click!",
   icons: { shortcut: "/gold_icon.png", icon: "/gold_icon.png" },
-  openGraph: { images: "/gold_icon.png" },
+  openGraph: {
+    images: "/gold_icon.png",
+    title: "Comp builder",
+    description: "Não sabe com o que jogar? Crie sua composição em um click!",
+  },
 };
 
 export default function RootLayout({
