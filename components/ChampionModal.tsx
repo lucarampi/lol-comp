@@ -245,7 +245,7 @@ export function getChampionSpellImageSrc(spell: string, version: string) {
 }
 
 export function getSpellLetter(index: number) {
-  const spellLetter = ["Q", "W", "E", "E"];
+  const spellLetter = ["Q", "W", "E", "R"];
   return spellLetter[index] || "";
 }
 
