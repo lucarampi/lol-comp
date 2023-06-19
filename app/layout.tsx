@@ -1,7 +1,9 @@
 import { Metadata } from "next";
 import { Providers } from "./providers";
+import 'react-toastify/dist/ReactToastify.css';
 
 import { MetadataRoute } from "next";
+import { ToastContainer } from "react-toastify";
 
 function robots(): MetadataRoute.Robots {
   return {
@@ -41,11 +43,11 @@ export const metadata: Metadata = {
   ],
   robots: {
     follow: true,
-    index:true,
-    googleBot:{
-      index:true,
-      follow:true,
-    }
+    index: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
   },
 };
 

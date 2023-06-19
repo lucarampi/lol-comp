@@ -28,6 +28,7 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react";
+import { Id, toast } from "react-toastify";
 import { Image } from "@chakra-ui/next-js";
 import { RiotAPITypes } from "@fightmegg/riot-api";
 import { filter, isEqual, sampleSize, some } from "lodash";
@@ -69,10 +70,8 @@ interface Composition {
     champions: ChampionType[];
   };
 }
-interface ToastProps {
-  action: string;
+interface BasicToastProps {
   id: string;
-  message: string;
 }
 
 export default function ChampionList({ championsDTO }: ChampionListProps) {
@@ -90,16 +89,6 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
     getChampionsTypeOptions()
   );
   const [fakeIsLoading, setFakeIsLoading] = useState(true);
-  const toast = useToast();
-
-  function generateUniqueToast({ action, id, message }: ToastProps) {
-    const toastId = `${action}-${id}`;
-    !toast.isActive(toastId) &&
-      toast({
-        id,
-        title: message,
-      });
-  }
 
   function getChampionsTypeOptions() {
     const options: Option[] = Object.entries(ChampionsTypeEnum).map(
@@ -128,9 +117,6 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
         parsed.filter((comp) => comp.version !== championsDTO?.version)
           .length !== 0;
       if (needsToUpadateVersion) {
-        alert(
-          "Nova versão do LoL detectada. Atualizando banco de dados local..."
-        );
         const updatedCompositions: Composition[] = parsed.map((comp) => {
           return {
             id: comp.id,
@@ -149,9 +135,13 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
             JSON.stringify(updatedCompositions)
           );
         } catch (error) {
-          alert("Falha ao aplicar atualização.");
+          notifyFinishUpdateDatabase("error");
+          return;
         }
-        setSavedCompositions(updatedCompositions);
+        setSavedCompositions(() => {
+          notifyFinishUpdateDatabase("success");
+          return updatedCompositions;
+        });
         return;
       }
     }
@@ -168,12 +158,7 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
     });
 
     if (!isSaveAllowed) {
-      generateUniqueToast({
-        action: "create-error",
-        id: composition?.id || uuidv4(),
-        message:
-          "Não é possível salvar a mesma composição mais de uma vez, nem uma composição vazia.",
-      });
+      notifySaveDuplicatedError();
       return;
     }
 
@@ -190,7 +175,7 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
         JSON.stringify(upadatedCompositions)
       );
     } catch (error) {
-      alert("Erro ao salver composição!");
+      notifySaveError();
       return;
     }
     setSavedCompositions(upadatedCompositions);
@@ -205,7 +190,7 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
         JSON.stringify(upadatedCompositions)
       );
     } catch (error) {
-      alert("Erro ao salver composição!");
+      notifyDeleteError();
       return;
     }
     setSavedCompositions(upadatedCompositions);
@@ -428,7 +413,7 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
                 colorScheme={"gray"}
                 onClick={() => {
                   if (!selectedChamps) {
-                    alert("Não foi possível salvar a composição");
+                    notifySaveEmptyError();
                     return;
                   }
                   saveCompositionsToLocalStorage({
@@ -538,4 +523,116 @@ export function getChampionSquareImageSrc(version: string, imageSrc: string) {
 export function getChampionSplashImageSrc(id: string, num: number = 0) {
   const formatedSplashName = `${id}_${num}.jpg`;
   return `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${formatedSplashName}`;
+}
+
+//utils
+
+function notifySaveDuplicatedError() {
+  toast.error("Não é possível salvar a mesma composição mais de uma vez!", {
+    position: "bottom-center",
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    toastId: "save_duplicated_composition_not_allowed",
+  });
+}
+
+function notifySaveEmptyError() {
+  toast.error("Não é possível salvar uma composição vazia!", {
+    position: "bottom-center",
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    toastId: "save_empty_composition_not_allowed",
+  });
+}
+
+function notifySaveError() {
+  toast.error("Erro ao salvar composição!", {
+    position: "bottom-center",
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    toastId: "save_error",
+  });
+}
+
+function notifyDeleteError() {
+  toast.error("Erro ao deletar composição!", {
+    position: "bottom-center",
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    toastId: "save_error",
+  });
+}
+
+// function notifyUpdatingDatabase() {
+//   return toast.loading("Atualizando banco de dados.", {
+//     position: "bottom-center",
+//     hideProgressBar: true,
+//     closeOnClick: true,
+//     pauseOnHover: false,
+//     draggable: true,
+//     progress: undefined,
+//     theme: "light",
+//     toastId: "update_database",
+//   });
+// }
+
+function notifyFinishUpdateDatabase(status: "success" | "error") {
+  switch (status) {
+    case "success":
+      return toast.success("Banco de dados atualizado com sucesso!", {
+        position: "bottom-center",
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        toastId: "update_database_success",
+      });
+    case "error":
+      return toast.error(
+        "Erro ao atualizar banco de dados! Recarregue a página quando possível.",
+        {
+          position: "bottom-center",
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          toastId: "update_database_error",
+        }
+      );
+
+    default:
+      return toast.error(
+        "Algo deu errado... Recarregue a página quando possível.",
+        {
+          position: "bottom-center",
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          toastId: "update_database_error",
+        }
+      );
+  }
 }

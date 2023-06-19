@@ -29,6 +29,7 @@ export default function SquareTooltipImage({
   const [isImageLoading, setIsImageLoading] = useState(true);
   return (
     <Skeleton
+      mb={4}
       rounded={"md"}
       aspectRatio={"1/1"}
       height={{ base: "12", sm: "16", md: "16" }}
