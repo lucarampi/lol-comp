@@ -1,14 +1,51 @@
 import { Metadata } from "next";
 import { Providers } from "./providers";
 
+import { MetadataRoute } from "next";
+
+function robots(): MetadataRoute.Robots {
+  return {
+    rules: {
+      userAgent: "*",
+      allow: "/",
+      disallow: "/api/",
+    },
+    sitemap: "https://acme.com/sitemap.xml",
+  };
+}
+
 export const metadata: Metadata = {
   title: "Comp builder",
   description: "Não sabe com o que jogar? Crie sua composição em um click!",
-  icons: { shortcut: "/gold_icon.png", icon: "/gold_icon.png" },
+  icons: { shortcut: "/app-icon.webp", icon: "/app-icon.webp" },
   openGraph: {
-    images: "/gold_icon.png",
+    images: "/app-icon.webp",
     title: "Comp builder",
     description: "Não sabe com o que jogar? Crie sua composição em um click!",
+    type: "website",
+    siteName: "LoL Comp Builder",
+  },
+  applicationName: "LoL Comp Builder",
+  category: "League of Legends",
+  keywords: [
+    "League of Legends",
+    "lol",
+    "composição",
+    "riot games",
+    "comp builder",
+    "jogo",
+    "game",
+    "build",
+    "counter",
+    "gg",
+  ],
+  robots: {
+    follow: true,
+    index:true,
+    googleBot:{
+      index:true,
+      follow:true,
+    }
   },
 };
 
