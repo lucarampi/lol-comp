@@ -36,6 +36,7 @@ import { useEffect, useRef, useState } from "react";
 import { RiotAPITypes } from "@fightmegg/riot-api";
 import api from "@/lib/axios";
 import useSWR from "swr";
+import SquareTooltipImage from "./SquareTooltipImage";
 
 interface ChampionModalProps {
   isOpen: boolean;
@@ -69,8 +70,6 @@ export default function ChampionModal({
     {
       revalidateIfStale: false,
       revalidateOnFocus: false,
-      revalidateOnMount: true,
-      revalidateOnReconnect: false,
     }
   );
   useEffect(() => {
@@ -128,93 +127,30 @@ export default function ChampionModal({
                 marginTop={2}
                 templateColumns={"repeat(5, 1fr)"}
               >
-                <Tooltip
-                  key={championData?.passive.name}
-                  rounded={"base"}
-                  placement={"top"}
-                  hasArrow
-                  label={
-                    <Box padding={1}>
-                      <VStack alignItems={"start"} gap={1}>
-                        <Heading size={"sm"}>
-                          {championData?.passive.name}
-                        </Heading>
-                        <Text
-                          fontWeight={"normal"}
-                          dangerouslySetInnerHTML={{
-                            __html: championData?.passive.description || "",
-                          }}
-                        ></Text>
-                      </VStack>
-                    </Box>
-                  }
-                >
-                  <VStack gap={1}>
-                    <Box
-                      key={championData?.passive.name}
-					  rounded={"md"}
-					  overflow={"auto"}
-					  aspectRatio={"1/1"}
-					  height={{ base: "12", sm: "16", md: "16" }}
-					  width={{ base: "12", sm: "16", md: "16" }}
-					  position={"relative"}
-                    >
-                      <Image
-                        fill
-                        sizes="(max-width: 768px) 7vw, (max-width: 1200px) 3vw,3vw"
-                        alt={championData?.passive.name || "error"}
-                        src={getChampionPassiveImageSrc(
-                          championData?.passive.image.full || "",
-                          champion.version
-                        )}
-                      />
-                    </Box>
-                    <Text> Passiva</Text>
-                  </VStack>
-                </Tooltip>
-
+                <SquareTooltipImage
+                  imageSrc={getChampionPassiveImageSrc(
+                    championData?.passive.image.full || "",
+                    champion.version
+                  )}
+                  label={"Passiva"}
+                  tooltip={{
+                    title: championData?.passive.name || "",
+                    content: championData?.passive.description || "",
+                  }}
+                />
                 {championData?.spells.map((spell, index) => (
-                  <Tooltip
-                    key={spell.name}
-                    rounded={"base"}
-                    placement={"top"}
-                    hasArrow
-                    label={
-                      <Box padding={1}>
-                        <VStack alignItems={"start"} gap={1}>
-                          <Heading size={"sm"}> {spell.name}</Heading>
-                          <Text
-                            fontWeight={"normal"}
-                            dangerouslySetInnerHTML={{
-                              __html: spell.description,
-                            }}
-                          ></Text>
-                        </VStack>
-                      </Box>
-                    }
-                  >
-                    <VStack cursor={"pointer"} gap={1}>
-                      <Box
-                        rounded={"md"}
-                        overflow={"auto"}
-                        aspectRatio={"1/1"}
-                        height={{ base: "12", sm: "16", md: "16" }}
-                        width={{ base: "12", sm: "16", md: "16" }}
-                        position={"relative"}
-                      >
-                        <Image
-                          fill
-                          sizes="(max-width: 768px) 7vw, (max-width: 1200px) 3vw,3vw"
-                          alt={spell.id}
-                          src={getChampionSpellImageSrc(
-                            spell.image.full,
-                            champion.version
-                          )}
-                        />
-                      </Box>
-                      <Text> {getSpellLetter(index)}</Text>
-                    </VStack>
-                  </Tooltip>
+                  <SquareTooltipImage
+                    key={spell.id}
+                    imageSrc={getChampionSpellImageSrc(
+                      spell.image.full,
+                      champion.version
+                    )}
+                    label={getSpellLetter(index)}
+                    tooltip={{
+                      title: spell.name,
+                      content: spell.description,
+                    }}
+                  />
                 ))}
               </Grid>
             </Box>
