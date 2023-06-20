@@ -10,7 +10,18 @@ import {
   HStack,
   Heading,
   Icon,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Kbd,
   Link,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -41,7 +52,9 @@ import {
   BsQuestion,
   BsXLg,
 } from "react-icons/bs";
-import { LuDices, LuSave } from "react-icons/lu";
+
+import { SlMagnifier } from "react-icons/sl";
+import { LuDices, LuPhoneIncoming, LuSave } from "react-icons/lu";
 import { v4 as uuidv4 } from "uuid";
 import ChampionImage from "./ChampionImage";
 export interface ChampionType
@@ -70,11 +83,10 @@ interface Composition {
     champions: ChampionType[];
   };
 }
-interface BasicToastProps {
-  id: string;
-}
 
 export default function ChampionList({ championsDTO }: ChampionListProps) {
+  const [searchText, setSearchText] = useState("");
+  const [searchVisible, setSearchVisible] = useState(false);
   const [championsList, setChampionsList] = useState<ChampionType[] | null>(
     Object.values(championsDTO?.data || {}) || null
   );
@@ -204,6 +216,20 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
     FakeLoader(850);
   }, []);
 
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === "/") {
+        setSearchVisible((prevVisible) => !prevVisible);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
+
   function rollChampions() {
     if (
       selectedOptions === null ||
@@ -313,7 +339,7 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
           align={"center"}
           alignSelf={"center"}
           position={"relative"}
-          py={{ base: 20, md: 20 }}
+          mt={20}
         >
           <Heading
             fontWeight={600}
@@ -440,6 +466,19 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
             </HStack>
           </Stack>
         </Stack>
+        <Box width={"full"} paddingY={6}>
+          <Text fontSize={"md"} textAlign={"center"} textColor={"gray.400"}>
+            Digite
+            <Kbd
+              marginX={1.5}
+              borderColor={"gray.400"}
+              colorScheme="blackAlpha"
+            >
+              /
+            </Kbd>
+            para procurar um campeão específico.
+          </Text>
+        </Box>
         <Heading
           fontWeight={600}
           fontSize={{ base: "xl", sm: "xl", md: "2xl" }}
@@ -502,6 +541,112 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
           )}
         </VStack>
       </Container>
+      <Modal
+        scrollBehavior="inside"
+        isOpen={searchVisible}
+        onClose={() => setSearchVisible(false)}
+      >
+        <ModalOverlay />
+        <ModalContent backdropBlur={0.3}>
+          <ModalHeader
+            display={"flex"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            paddingTop={0}
+            paddingBottom={0}
+            paddingX={1}
+          >
+            <InputGroup>
+              <InputLeftElement pointerEvents="none">
+                <SlMagnifier color="gray.300" />
+              </InputLeftElement>
+              <Input
+                value={searchText}
+                boxShadow={"none !important"}
+                placeholder={"Digitar o nome de um campeão..."}
+                border={0}
+                onChange={(ev) => {
+                  const regex = /[^\p{L}\s´`']/gu;
+                  const formattedString = ev.target.value.replace(regex, "");
+                  setSearchText(formattedString);
+                }}
+              />
+            </InputGroup>
+          </ModalHeader>
+          <ModalBody padding={!!searchText && !!searchText.trim() ? 2 : 0}>
+            <VStack
+              width={"full"}
+              justifyContent={"space-between"}
+              alignItems={"start"}
+              paddingX={2}
+            >
+              {!!searchText &&
+                !!searchText.trim() &&
+                championsList
+                  ?.filter(
+                    (champ) =>
+                      champ.id
+                        .toLowerCase()
+                        .includes(searchText.toLowerCase()) ||
+                      champ.name
+                        .toLowerCase()
+                        .includes(searchText.toLowerCase())
+                  )
+                  .map((temp) => (
+                    <HStack
+                      width={"full"}
+                      key={temp.id}
+                      justifyContent={"space-between"}
+                      paddingRight={2}
+                      cursor={"pointer"}
+                      _hover={{
+                        backgroundColor:"gray.200"
+                      }}
+                    >
+                      <HStack>
+                        <Image
+                          rounded={"sm"}
+                          width={50}
+                          height={50}
+                          alt="a"
+                          quality={50}
+                          key={temp?.id}
+                          loading="eager"
+                          decoding="async"
+                          sizes="(max-width: 768px) 1vw, (max-width: 1200px) 1vw, 1vw"
+                          src={getChampionSquareImageSrc(
+                            temp.version,
+                            temp.image.full
+                          )}
+                        />
+                        <Text> {temp.name}</Text>
+                      </HStack>
+                      <Tag size={"sm"}>
+                        {temp?.tags
+                          .map(
+                            (tag) =>
+                              ChampionsTypeEnum[
+                                tag as keyof typeof ChampionsTypeEnum
+                              ]
+                          )
+                          .join(" | ")}
+                      </Tag>
+                    </HStack>
+                  ))}
+            </VStack>
+          </ModalBody>
+          <ModalFooter py={1}>
+            <Text
+              width={"full"}
+              textAlign={"center"}
+              fontSize={"xs"}
+              textColor={"gray.300"}
+            >
+              Funcionalidade em beta
+            </Text>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }

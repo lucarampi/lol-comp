@@ -3,7 +3,7 @@ import { RiotAPITypes } from "@fightmegg/riot-api";
 import api from "@/lib/axios";
 import ChampionContainer from "@/components/ChampionList";
 
-export const revalidate = 900
+export const revalidate = 900;
 
 const getAllChampions = (url: string) =>
   api
@@ -15,13 +15,12 @@ export default async function IndexPage() {
   const championsList = Object.values(res || {});
   // console.log(res);
   // console.log(champions)
-  
+
   return (
     <>
-      <section>
-        {!!championsList && (
-          <ChampionContainer championsDTO={res} />
-        )}
+      <section
+      >
+        {!!championsList && <ChampionContainer championsDTO={res} />}
       </section>
     </>
   );
