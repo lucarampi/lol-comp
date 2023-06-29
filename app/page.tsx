@@ -3,8 +3,6 @@ import { RiotAPITypes } from "@fightmegg/riot-api";
 import api from "@/lib/axios";
 import ChampionContainer from "@/components/ChampionList";
 
-export const revalidate = 900;
-
 const getAllChampions = (url: string) =>
   api
     .get<RiotAPITypes.DDragon.DDragonChampionListDTO>(url)
@@ -24,4 +22,6 @@ export default async function IndexPage() {
       </section>
     </>
   );
+
 }
+export const revalidate = 900;
