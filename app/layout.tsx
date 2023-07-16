@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { Providers } from "./providers";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
+import { Analytics } from "@vercel/analytics/react";
 
 import { MetadataRoute } from "next";
 import { ToastContainer } from "react-toastify";
@@ -60,6 +61,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Providers>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   );
