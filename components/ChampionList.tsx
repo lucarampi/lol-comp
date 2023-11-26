@@ -84,6 +84,14 @@ interface Composition {
   };
 }
 
+const enum LanesEnum {
+  TOP = "top",
+  JUNGLE = "jg",
+  MID = "mid",
+  ADC = "adc",
+  SUPPORT = "sup",
+}
+
 export default function ChampionList({ championsDTO }: ChampionListProps) {
   const [searchText, setSearchText] = useState("");
   const [searchVisible, setSearchVisible] = useState(false);
@@ -600,7 +608,7 @@ export default function ChampionList({ championsDTO }: ChampionListProps) {
                       paddingRight={2}
                       cursor={"pointer"}
                       _hover={{
-                        backgroundColor:"gray.200"
+                        backgroundColor: "gray.200",
                       }}
                     >
                       <HStack>
